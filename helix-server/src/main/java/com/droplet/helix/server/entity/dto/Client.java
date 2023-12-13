@@ -19,5 +19,9 @@ public class Client {
 
     String token;
 
+    String location;
+
+    String node;
+
     Date registerTime;
 }
