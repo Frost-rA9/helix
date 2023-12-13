@@ -6,6 +6,8 @@ import com.droplet.helix.client.utils.MonitorUtil;
 import com.droplet.helix.client.utils.NetUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,7 +21,7 @@ import java.util.Scanner;
 
 @Slf4j
 @Configuration
-public class ServerConfiguration {
+public class ServerConfiguration implements ApplicationRunner {
 
     @Resource
     NetUtil netUtil;
@@ -36,6 +38,12 @@ public class ServerConfiguration {
         }
         System.out.println(monitorUtil.monitorBaseDetail());
         return config;
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("正在向服务端更新系统基本信息...");
+        netUtil.updateBaseDetails(monitorUtil.monitorBaseDetail());
     }
 
     private ConnectionConfig registerToServer() {

@@ -29,9 +29,9 @@ public class MonitorUtil {
         OperatingSystem operatingSystem = systemInfo.getOperatingSystem();
         HardwareAbstractionLayer hardware = systemInfo.getHardware();
         double memoryValue = hardware.getMemory().getTotal() / 1024.0 / 1024 / 1024;
-        double memorySize = new BigDecimal(memoryValue).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double memorySize = new BigDecimal(memoryValue).setScale(0, RoundingMode.HALF_UP).doubleValue();
         double diskSizeValue = Arrays.stream(File.listRoots()).mapToLong(File::getTotalSpace).sum() / 1024.0 / 1024 / 1024;
-        double diskSize = new BigDecimal(diskSizeValue).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double diskSize = new BigDecimal(diskSizeValue).setScale(0, RoundingMode.HALF_UP).doubleValue();
         String ip = Objects.requireNonNull(this.findNetworkInterface(hardware)).getIPv4addr()[0];
 
         return new BaseDetail()
