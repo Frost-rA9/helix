@@ -71,6 +71,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
         StringBuilder stringBuilder = new StringBuilder(24);
         for (int index = 0; index < 24; index++)
             stringBuilder.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        System.out.println(stringBuilder);
         return stringBuilder.toString();
     }
 }
