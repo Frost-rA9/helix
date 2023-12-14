@@ -3,6 +3,7 @@ package com.droplet.helix.server.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
+import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 
 public interface ClientService extends IService<Client> {
 
@@ -15,4 +16,6 @@ public interface ClientService extends IService<Client> {
     Boolean verifyAndRegister(String token);
 
     void updateClientDetail(ClientDetailVO clientDetailVO, Client client);
+
+    void updateRuntimeDetail(RuntimeDetailVO runtimeDetailVO, Client client);
 }

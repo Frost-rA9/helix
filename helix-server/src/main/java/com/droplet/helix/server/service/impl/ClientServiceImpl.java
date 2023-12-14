@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.dto.ClientDetail;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
+import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
 import com.droplet.helix.server.mapper.ClientMapper;
 import com.droplet.helix.server.service.ClientService;
@@ -75,6 +76,13 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
         } else {
             clientDetailMapper.insert(clientDetail);
         }
+    }
+
+    private final Map<Integer, RuntimeDetailVO> currentRuntime = new ConcurrentHashMap<>();
+
+    @Override
+    public void updateRuntimeDetail(RuntimeDetailVO runtimeDetailVO, Client client) {
+        currentRuntime.put(client.getId(), runtimeDetailVO);
     }
 
     private void addClientCache(Client client) {

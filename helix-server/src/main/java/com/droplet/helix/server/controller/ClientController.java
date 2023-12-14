@@ -3,6 +3,7 @@ package com.droplet.helix.server.controller;
 import com.droplet.helix.server.entity.RestBean;
 import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
+import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.service.ClientService;
 import com.droplet.helix.server.utils.Const;
 import jakarta.annotation.Resource;
@@ -26,6 +27,13 @@ public class ClientController {
     public RestBean<Void> updateClientDetail(@RequestAttribute(Const.ATTR_CLIENT) Client client,
                                              @RequestBody @Valid ClientDetailVO clientDetailVO) {
         clientService.updateClientDetail(clientDetailVO, client);
+        return RestBean.success();
+    }
+
+    @PostMapping("/runtime")
+    public RestBean<Void> updateRuntimeDetail(@RequestAttribute(Const.ATTR_CLIENT) Client client,
+                                              @RequestBody @Valid RuntimeDetailVO runtimeDetailVO) {
+        clientService.updateRuntimeDetail(runtimeDetailVO, client);
         return RestBean.success();
     }
 }

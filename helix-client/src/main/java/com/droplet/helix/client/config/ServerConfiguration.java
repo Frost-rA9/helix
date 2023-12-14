@@ -36,7 +36,6 @@ public class ServerConfiguration implements ApplicationRunner {
         if (Objects.isNull(config)) {
             config = this.registerToServer();
         }
-        System.out.println(monitorUtil.monitorBaseDetail());
         return config;
     }
 
