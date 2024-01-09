@@ -8,6 +8,7 @@ import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
 import com.droplet.helix.server.mapper.ClientMapper;
 import com.droplet.helix.server.service.ClientService;
+import com.droplet.helix.server.utils.InfluxDBUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +32,9 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
 
     @Resource
     ClientDetailMapper clientDetailMapper;
+
+    @Resource
+    InfluxDBUtils influxDBUtils;
 
     @PostConstruct
     public void initClientCache() {
@@ -83,6 +87,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
     @Override
     public void updateRuntimeDetail(RuntimeDetailVO runtimeDetailVO, Client client) {
         currentRuntime.put(client.getId(), runtimeDetailVO);
+        influxDBUtils.writeRuntimeData(client.getId(), runtimeDetailVO);
     }
 
     private void addClientCache(Client client) {
