@@ -5,6 +5,7 @@ import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.dto.ClientDetail;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
+import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
 import com.droplet.helix.server.mapper.ClientMapper;
 import com.droplet.helix.server.service.ClientService;
@@ -15,10 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -88,6 +86,20 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
     public void updateRuntimeDetail(RuntimeDetailVO runtimeDetailVO, Client client) {
         currentRuntime.put(client.getId(), runtimeDetailVO);
         influxDBUtils.writeRuntimeData(client.getId(), runtimeDetailVO);
+    }
+
+    @Override
+    public List<ClientPreviewVo> listClients() {
+        return clientIdCache.values().stream().map(client -> {
+            ClientPreviewVo clientPreviewVo = client.asViewObject(ClientPreviewVo.class);
+            BeanUtils.copyProperties(clientDetailMapper.selectById(clientPreviewVo.getId()), clientPreviewVo);
+            RuntimeDetailVO runtimeDetailVO = currentRuntime.get(client.getId());
+            if (Objects.nonNull(runtimeDetailVO) && System.currentTimeMillis() - runtimeDetailVO.getTimestamp() < 60 * 1000) {
+                BeanUtils.copyProperties(runtimeDetailVO, clientPreviewVo);
+                clientPreviewVo.setOnline(true);
+            }
+            return clientPreviewVo;
+        }).toList();
     }
 
     private void addClientCache(Client client) {

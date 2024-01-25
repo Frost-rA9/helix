@@ -1,6 +1,14 @@
 <script setup>
 
 import PreviewCard from "@/component/PreviewCard.vue";
+import {ref} from "vue";
+import {get} from "@/net";
+
+const list = ref([])
+
+const updateList = () => get('/api/monitor/list', data => list.value = data)
+setInterval(updateList, 10000)
+updateList()
 </script>
 
 <template>
@@ -11,9 +19,7 @@ import PreviewCard from "@/component/PreviewCard.vue";
     <div class="desc">管理已注册的主机实例，实时监控主机运行状态</div>
     <el-divider style="margin: 10px 0"/>
     <div class="card-list">
-      <preview-card/>
-      <preview-card/>
-      <preview-card/>
+      <preview-card v-for="item in list" :data="item"/>
     </div>
   </div>
 </template>
@@ -33,7 +39,7 @@ import PreviewCard from "@/component/PreviewCard.vue";
   }
 }
 
-.card-list{
+.card-list {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
