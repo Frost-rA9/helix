@@ -2,6 +2,7 @@ package com.droplet.helix.server.controller;
 
 import com.droplet.helix.server.entity.RestBean;
 import com.droplet.helix.server.entity.vo.request.RenameClientVo;
+import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 import com.droplet.helix.server.service.ClientService;
@@ -27,6 +28,12 @@ public class MonitorController {
     @PostMapping("/rename")
     public RestBean<Void> renameClient(@RequestBody @Valid RenameClientVo renameClientVo) {
         clientService.renameClient(renameClientVo);
+        return RestBean.success();
+    }
+
+    @PostMapping("/node")
+    public RestBean<Void> renameNode(@RequestBody @Valid RenameNodeVO renameNodeVO) {
+        clientService.renameNode(renameNodeVO);
         return RestBean.success();
     }
 

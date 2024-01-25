@@ -6,6 +6,7 @@ import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.dto.ClientDetail;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
 import com.droplet.helix.server.entity.vo.request.RenameClientVo;
+import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
@@ -119,6 +120,15 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
         BeanUtils.copyProperties(clientDetailMapper.selectById(clientId), clientDetailsVo);
         clientDetailsVo.setOnline(this.isOnline(currentRuntime.get(clientId)));
         return clientDetailsVo;
+    }
+
+    @Override
+    public void renameNode(RenameNodeVO renameNodeVO) {
+        this.update(new LambdaUpdateWrapper<Client>()
+                .eq(Client::getId, renameNodeVO.getId())
+                .set(Client::getNode, renameNodeVO.getNode())
+                .set(Client::getLocation, renameNodeVO.getLocation()));
+        this.initClientCache();
     }
 
     private boolean isOnline(RuntimeDetailVO runtimeDetailVO) {
