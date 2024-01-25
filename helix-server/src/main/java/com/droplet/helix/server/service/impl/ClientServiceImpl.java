@@ -1,9 +1,11 @@
 package com.droplet.helix.server.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.dto.ClientDetail;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
+import com.droplet.helix.server.entity.vo.request.RenameClientVo;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
@@ -100,6 +102,14 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
             }
             return clientPreviewVo;
         }).toList();
+    }
+
+    @Override
+    public void renameClient(RenameClientVo renameClientVo) {
+        this.update(new LambdaUpdateWrapper<Client>()
+                .eq(Client::getId, renameClientVo.getId())
+                .set(Client::getName, renameClientVo.getName()));
+        this.initClientCache();
     }
 
     private void addClientCache(Client client) {
