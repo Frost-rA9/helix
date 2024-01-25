@@ -5,6 +5,7 @@ import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
 import com.droplet.helix.server.entity.vo.request.RenameClientVo;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
+import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface ClientService extends IService<Client> {
     List<ClientPreviewVo> listClients();
 
     void renameClient(RenameClientVo renameClientVo);
+
+    ClientDetailsVo clientDetails(int clientId);
 }

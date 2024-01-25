@@ -7,6 +7,7 @@ import com.droplet.helix.server.entity.dto.ClientDetail;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
 import com.droplet.helix.server.entity.vo.request.RenameClientVo;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
+import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
 import com.droplet.helix.server.mapper.ClientMapper;
@@ -96,7 +97,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
             ClientPreviewVo clientPreviewVo = client.asViewObject(ClientPreviewVo.class);
             BeanUtils.copyProperties(clientDetailMapper.selectById(clientPreviewVo.getId()), clientPreviewVo);
             RuntimeDetailVO runtimeDetailVO = currentRuntime.get(client.getId());
-            if (Objects.nonNull(runtimeDetailVO) && System.currentTimeMillis() - runtimeDetailVO.getTimestamp() < 60 * 1000) {
+            if (this.isOnline(runtimeDetailVO)) {
                 BeanUtils.copyProperties(runtimeDetailVO, clientPreviewVo);
                 clientPreviewVo.setOnline(true);
             }
@@ -110,6 +111,18 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
                 .eq(Client::getId, renameClientVo.getId())
                 .set(Client::getName, renameClientVo.getName()));
         this.initClientCache();
+    }
+
+    @Override
+    public ClientDetailsVo clientDetails(int clientId) {
+        ClientDetailsVo clientDetailsVo = this.clientIdCache.get(clientId).asViewObject(ClientDetailsVo.class);
+        BeanUtils.copyProperties(clientDetailMapper.selectById(clientId), clientDetailsVo);
+        clientDetailsVo.setOnline(this.isOnline(currentRuntime.get(clientId)));
+        return clientDetailsVo;
+    }
+
+    private boolean isOnline(RuntimeDetailVO runtimeDetailVO) {
+        return Objects.nonNull(runtimeDetailVO) && System.currentTimeMillis() - runtimeDetailVO.getTimestamp() < 60 * 1000;
     }
 
     private void addClientCache(Client client) {
