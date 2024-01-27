@@ -10,6 +10,7 @@ import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
+import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
 import com.droplet.helix.server.mapper.ClientMapper;
 import com.droplet.helix.server.service.ClientService;
@@ -129,6 +130,19 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
                 .set(Client::getNode, renameNodeVO.getNode())
                 .set(Client::getLocation, renameNodeVO.getLocation()));
         this.initClientCache();
+    }
+
+    @Override
+    public RuntimeHistoryVO clientRuntimeDetailsHistory(int clientId) {
+        RuntimeHistoryVO runtimeHistoryVO = influxDBUtils.readRuntimeData(clientId);
+        ClientDetail detail = clientDetailMapper.selectById(clientId);
+        BeanUtils.copyProperties(detail, runtimeHistoryVO);
+        return runtimeHistoryVO;
+    }
+
+    @Override
+    public RuntimeDetailVO clientRuntimeDetailsNow(int clientId) {
+        return currentRuntime.get(clientId);
     }
 
     private boolean isOnline(RuntimeDetailVO runtimeDetailVO) {

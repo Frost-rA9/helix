@@ -3,8 +3,10 @@ package com.droplet.helix.server.controller;
 import com.droplet.helix.server.entity.RestBean;
 import com.droplet.helix.server.entity.vo.request.RenameClientVo;
 import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
+import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
+import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
 import com.droplet.helix.server.service.ClientService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -40,5 +42,15 @@ public class MonitorController {
     @GetMapping("/details")
     public RestBean<ClientDetailsVo> details(int clientId) {
         return RestBean.success(clientService.clientDetails(clientId));
+    }
+
+    @GetMapping("/runtime-history")
+    public RestBean<RuntimeHistoryVO> runtimeDetailsHistory(int clientId) {
+        return RestBean.success(clientService.clientRuntimeDetailsHistory(clientId));
+    }
+
+    @GetMapping("/runtime-now")
+    public RestBean<RuntimeDetailVO> runtimeDetailsNow(int clientId) {
+        return RestBean.success(clientService.clientRuntimeDetailsNow(clientId));
     }
 }
