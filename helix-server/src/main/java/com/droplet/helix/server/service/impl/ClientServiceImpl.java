@@ -41,6 +41,8 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
 
     @PostConstruct
     public void initClientCache() {
+        clientTokenCache.clear();
+        clientIdCache.clear();
         this.list().forEach(this::addClientCache);
     }
 
@@ -145,6 +147,14 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
         return currentRuntime.get(clientId);
     }
 
+    @Override
+    public void deleteClient(int clientId) {
+        this.removeById(clientId);
+        clientDetailMapper.deleteById(clientId);
+        this.initClientCache();
+        currentRuntime.remove(clientId);
+    }
+
     private boolean isOnline(RuntimeDetailVO runtimeDetailVO) {
         return Objects.nonNull(runtimeDetailVO) && System.currentTimeMillis() - runtimeDetailVO.getTimestamp() < 60 * 1000;
     }
@@ -164,7 +174,6 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
         StringBuilder stringBuilder = new StringBuilder(24);
         for (int index = 0; index < 24; index++)
             stringBuilder.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
-        System.out.println(stringBuilder);
         return stringBuilder.toString();
     }
 }
