@@ -1,6 +1,6 @@
 <script setup>
 import {reactive, ref} from "vue";
-import {Lock, Switch} from "@element-plus/icons-vue";
+import {Lock, Plus, Switch} from "@element-plus/icons-vue";
 import {logout, post} from "@/net";
 import {ElMessage} from "element-plus";
 import router from "@/router";
@@ -56,6 +56,8 @@ function resetPassword() {
   <div style="display: flex;gap: 10px">
     <div style="flex: 50%">
       <div class="info-card">
+        <div class="title"><i class="fa-solid fa-lock"></i> 修改密码</div>
+        <el-divider style="margin: 10px 0"/>
         <el-form @validate="onValidate" :model="form" :rules="rules"
                  ref="formRef" style="margin: 20px" label-width="100">
           <el-form-item label="当前密码" prop="oldPassword">
@@ -82,7 +84,11 @@ function resetPassword() {
       </div>
     </div>
     <div class="info-card" style="flex: 50%">
-
+      <div class="title"><i class="fa-solid fa-users"></i> 子用户管理</div>
+      <el-divider style="margin: 10px 0"/>
+      <el-empty :image-size="100" description="当前没有子账户">
+        <el-button :icon="Plus" type="primary" plain>添加子用户</el-button>
+      </el-empty>
     </div>
   </div>
 </template>
@@ -92,5 +98,12 @@ function resetPassword() {
   border-radius: 7px;
   padding: 15px 20px;
   background-color: var(--el-bg-color);
+  height: fit-content;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: dodgerblue;
 }
 </style>

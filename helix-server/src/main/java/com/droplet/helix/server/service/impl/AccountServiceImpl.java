@@ -1,10 +1,14 @@
 package com.droplet.helix.server.service.impl;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.droplet.helix.server.entity.dto.Account;
 import com.droplet.helix.server.entity.vo.request.ConfirmResetVO;
+import com.droplet.helix.server.entity.vo.request.CreateSubAccountVO;
 import com.droplet.helix.server.entity.vo.request.EmailResetVO;
+import com.droplet.helix.server.entity.vo.response.SubAccountVO;
 import com.droplet.helix.server.mapper.AccountMapper;
 import com.droplet.helix.server.service.AccountService;
 import com.droplet.helix.server.utils.Const;
@@ -19,6 +23,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -131,6 +137,35 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 .eq(Account::getId, userId)
                 .set(Account::getPassword, passwordEncoder.encode(newPassword)));
         return true;
+    }
+
+    @Override
+    public void createSubAccount(CreateSubAccountVO createSubAccountVO) {
+        Account account = this.findAccountByNameOrEmail(createSubAccountVO.getEmail());
+        if (account != null)
+            throw new IllegalArgumentException("该电子邮件已被注册");
+        account = this.findAccountByNameOrEmail(createSubAccountVO.getUsername());
+        if (account != null)
+            throw new IllegalArgumentException("该用户名已被注册");
+        account = new Account(null, createSubAccountVO.getUsername(), passwordEncoder.encode(createSubAccountVO.getPassword()),
+                createSubAccountVO.getEmail(), Const.ROLE_NORMAL, new Date(), JSONArray.copyOf(createSubAccountVO.getClients()).toJSONString());
+        this.save(account);
+    }
+
+    @Override
+    public void deleteSubAccount(int uid) {
+        this.removeById(uid);
+    }
+
+    @Override
+    public List<SubAccountVO> listSubAccount() {
+        return this.list(new LambdaQueryWrapper<Account>()
+                        .eq(Account::getRole, Const.ROLE_NORMAL))
+                .stream().map(account -> {
+                    SubAccountVO subAccountVO = account.asViewObject(SubAccountVO.class);
+                    subAccountVO.setClientList(JSONArray.parse(account.getClients()));
+                    return subAccountVO;
+                }).toList();
     }
 
     /**
