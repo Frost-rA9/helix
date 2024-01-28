@@ -10,6 +10,7 @@ import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
+import com.droplet.helix.server.entity.vo.response.ClientSimpleVO;
 import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
 import com.droplet.helix.server.mapper.ClientDetailMapper;
 import com.droplet.helix.server.mapper.ClientMapper;
@@ -106,6 +107,15 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
                 clientPreviewVo.setOnline(true);
             }
             return clientPreviewVo;
+        }).toList();
+    }
+
+    @Override
+    public List<ClientSimpleVO> listSimpleList() {
+        return clientIdCache.values().stream().map(client -> {
+            ClientSimpleVO clientSimpleVO = client.asViewObject(ClientSimpleVO.class);
+            BeanUtils.copyProperties(clientDetailMapper.selectById(clientSimpleVO.getId()), clientSimpleVO);
+            return clientSimpleVO;
         }).toList();
     }
 

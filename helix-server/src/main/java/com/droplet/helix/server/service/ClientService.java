@@ -8,6 +8,7 @@ import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
+import com.droplet.helix.server.entity.vo.response.ClientSimpleVO;
 import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface ClientService extends IService<Client> {
     void updateRuntimeDetail(RuntimeDetailVO runtimeDetailVO, Client client);
 
     List<ClientPreviewVo> listClients();
+
+    List<ClientSimpleVO> listSimpleList();
 
     void renameClient(RenameClientVo renameClientVo);
 

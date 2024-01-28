@@ -6,6 +6,7 @@ import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
 import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
+import com.droplet.helix.server.entity.vo.response.ClientSimpleVO;
 import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
 import com.droplet.helix.server.service.ClientService;
 import jakarta.annotation.Resource;
@@ -25,6 +26,11 @@ public class MonitorController {
     @GetMapping("/list")
     public RestBean<List<ClientPreviewVo>> listAllClient() {
         return RestBean.success(clientService.listClients());
+    }
+
+    @GetMapping("/simple-list")
+    public RestBean<List<ClientSimpleVO>> simpleClientList() {
+        return RestBean.success(clientService.listSimpleList());
     }
 
     @PostMapping("/rename")
