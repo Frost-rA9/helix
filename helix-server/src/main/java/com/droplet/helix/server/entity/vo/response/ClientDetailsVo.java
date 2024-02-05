@@ -3,7 +3,7 @@ package com.droplet.helix.server.entity.vo.response;
 import lombok.Data;
 
 @Data
-public class ClientDetailsVo {
+public class ClientDetailsVO {
     int id;
 
     String name;

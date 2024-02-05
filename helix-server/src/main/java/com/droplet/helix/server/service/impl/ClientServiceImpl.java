@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.dto.ClientDetail;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
-import com.droplet.helix.server.entity.vo.request.RenameClientVo;
+import com.droplet.helix.server.entity.vo.request.RenameClientVO;
 import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
-import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
+import com.droplet.helix.server.entity.vo.response.ClientDetailsVO;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 import com.droplet.helix.server.entity.vo.response.ClientSimpleVO;
 import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
@@ -120,7 +120,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
     }
 
     @Override
-    public void renameClient(RenameClientVo renameClientVo) {
+    public void renameClient(RenameClientVO renameClientVo) {
         this.update(new LambdaUpdateWrapper<Client>()
                 .eq(Client::getId, renameClientVo.getId())
                 .set(Client::getName, renameClientVo.getName()));
@@ -128,8 +128,8 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, Client> impleme
     }
 
     @Override
-    public ClientDetailsVo clientDetails(int clientId) {
-        ClientDetailsVo clientDetailsVo = this.clientIdCache.get(clientId).asViewObject(ClientDetailsVo.class);
+    public ClientDetailsVO clientDetails(int clientId) {
+        ClientDetailsVO clientDetailsVo = this.clientIdCache.get(clientId).asViewObject(ClientDetailsVO.class);
         BeanUtils.copyProperties(clientDetailMapper.selectById(clientId), clientDetailsVo);
         clientDetailsVo.setOnline(this.isOnline(currentRuntime.get(clientId)));
         return clientDetailsVo;

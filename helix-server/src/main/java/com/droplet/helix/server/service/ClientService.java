@@ -3,10 +3,10 @@ package com.droplet.helix.server.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.droplet.helix.server.entity.dto.Client;
 import com.droplet.helix.server.entity.vo.request.ClientDetailVO;
-import com.droplet.helix.server.entity.vo.request.RenameClientVo;
+import com.droplet.helix.server.entity.vo.request.RenameClientVO;
 import com.droplet.helix.server.entity.vo.request.RenameNodeVO;
 import com.droplet.helix.server.entity.vo.request.RuntimeDetailVO;
-import com.droplet.helix.server.entity.vo.response.ClientDetailsVo;
+import com.droplet.helix.server.entity.vo.response.ClientDetailsVO;
 import com.droplet.helix.server.entity.vo.response.ClientPreviewVo;
 import com.droplet.helix.server.entity.vo.response.ClientSimpleVO;
 import com.droplet.helix.server.entity.vo.response.RuntimeHistoryVO;
@@ -31,9 +31,9 @@ public interface ClientService extends IService<Client> {
 
     List<ClientSimpleVO> listSimpleList();
 
-    void renameClient(RenameClientVo renameClientVo);
+    void renameClient(RenameClientVO renameClientVo);
 
-    ClientDetailsVo clientDetails(int clientId);
+    ClientDetailsVO clientDetails(int clientId);
 
     void renameNode(RenameNodeVO renameNodeVO);
 

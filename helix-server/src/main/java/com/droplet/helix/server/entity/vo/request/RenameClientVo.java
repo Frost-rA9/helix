@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-public class RenameClientVo {
+public class RenameClientVO {
 
     @NotNull
     int id;

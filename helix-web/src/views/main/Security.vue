@@ -5,6 +5,9 @@ import {get, logout, post} from "@/net";
 import {ElMessage} from "element-plus";
 import router from "@/router";
 import CreateSubAccount from "@/component/CreateSubAccount.vue";
+import {useStore} from "@/store";
+
+const store = useStore()
 
 const formRef = ref()
 const valid = ref(false)
@@ -53,10 +56,12 @@ function resetPassword() {
 }
 
 const simpleList = ref([])
-get('/api/monitor/simple-list', list => {
-  simpleList.value = list
-  initSubAccounts()
-})
+if (store.isAdmin) {
+  get('/api/monitor/simple-list', list => {
+    simpleList.value = list
+    initSubAccounts()
+  })
+}
 
 const accounts = ref([])
 const initSubAccounts = () => get('/api/user/sub/list', list => accounts.value = list)
@@ -126,11 +131,14 @@ function deleteAccount(id) {
                    @click="createAccount = true" plain>添加更多子用户
         </el-button>
       </div>
-      <el-empty :image-size="100" description="当前没有子账户" v-else>
-        <el-button :icon="Plus" type="primary" plain
-                   @click="createAccount = true">添加子用户
-        </el-button>
-      </el-empty>
+      <div v-else>
+        <el-empty :image-size="100" description="当前没有子账户" v-else>
+          <el-button :icon="Plus" type="primary" plain
+                     @click="createAccount = true">添加子用户
+          </el-button>
+        </el-empty>
+        <el-empty :image-size="100" description="子账户只能由管理员账号进行操作" v-else/>
+      </div>
     </div>
     <el-drawer v-model="createAccount" size="350" :with-header="false">
       <create-sub-account :clients="simpleList" @create="createAccount = false;initSubAccounts()"/>
